@@ -1,8 +1,5 @@
 import AWS from 'aws-sdk';
-import middy from '@middy/core';
-import httpJsonBodyParser from '@middy/http-json-body-parser';
-import httpEventNormalizer from '@middy/http-event-normalizer';
-import httpErrorHandler from '@middy/http-error-handler';
+import commonMiddleware from '../lib/commonMiddleware';
 import createError from 'http-errors';
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
@@ -11,6 +8,7 @@ async function getAuctions(event, context) {
     let auctions;
 
     try {
+        //obtener datos de dynamo
         const result = await dynamodb.scan({
             TableName: process.env.AUCTIONS_TABLE_NAME
         }).promise();
@@ -25,9 +23,6 @@ async function getAuctions(event, context) {
         body: JSON.stringify(auctions),
     };
 }
-export const handler = middy(getAuctions)
-    .use(httpJsonBodyParser())
-    .use(httpEventNormalizer())
-    .use(httpErrorHandler());
+export const handler = commonMiddleware(getAuctions);
 
 

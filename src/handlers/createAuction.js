@@ -4,19 +4,19 @@ import createError from 'http-errors';
 import commonMiddleware from '../lib/commonMiddleware';
 
 //config para offline de Dynamo 
-const IS_OFFLINE = process.env.IS_OFFLINE;
-let dynamodb;
+// const IS_OFFLINE = process.env.IS_OFFLINE;
+// let dynamodb;
 
-if (IS_OFFLINE === 'true') {
-  dynamodb = new AWS.DynamoDB.DocumentClient({
-    region: 'localhost',
-    endpoint: 'http://localhost:8000'
-  })
-} else {
-  const dynamodb = new AWS.DynamoDB.DocumentClient();
-}
+// if (IS_OFFLINE === 'true') {
+//   dynamodb = new AWS.DynamoDB.DocumentClient({
+//     region: 'localhost',
+//     endpoint: 'http://localhost:8000'
+//   })
+// } else {
+//   const dynamodb = new AWS.DynamoDB.DocumentClient();
+// }
 
-
+const dynamodb = new AWS.DynamoDB.DocumentClient();
 
 async function createAuction(event, context) {
 
@@ -30,6 +30,9 @@ async function createAuction(event, context) {
     autor,
     status: 'OPEN',
     createdAt: now.toISOString(),
+    highestBid: {
+      amount: 0,
+    },
   };
 
   try {

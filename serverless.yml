@@ -21,6 +21,9 @@ provider:
         - dynamodb:PutItem
         - dynamodb:Scan
         - dynamodb:GetItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:Query
       Resource:
         - ${self:custom.AuctionsTable.arn}
 
@@ -71,7 +74,14 @@ functions:
     events:
       - http:
           method: PUT
-          path: /auction/{id}                          
+          path: /auction/{id}   
+  placedBid:
+    handler: src/handlers/placedBid.handler
+    events:
+      - http:
+          method: PATCH   
+          path: auction/{id}/bid     
+          
 
 custom:
   dynamodb:

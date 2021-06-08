@@ -18,6 +18,7 @@ provider:
     - Effect: Allow
       Action:
         - dynamodb:PutItem
+        - dynamodb:Scan
       Resource:
         - ${self:custom.AuctionsTable.arn}
 
@@ -45,6 +46,12 @@ functions:
       - http:
           method: POST
           path: /auction
+  getAuctions:
+    handler: src/handlers/getAuctions.handler
+    events:
+      - http:
+          method: GET
+          path: /auctions        
 custom:
   AuctionsTable:
     name: !Ref AuctionsTable

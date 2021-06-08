@@ -5,6 +5,7 @@ plugins:
   - serverless-bundle
   - serverless-pseudo-parameters
   - serverless-offline
+  - serverless-dynamodb-local
 
 provider:
   name: aws
@@ -58,9 +59,27 @@ functions:
     events:
       - http:
           method: GET
-          path: /auction/{id}         
+          path: /auction/{id} 
+  deleteAuction:
+    handler: src/handlers/deleteAuction.handler
+    events:
+      - http:
+          method: DELETE
+          path: /auction/{id}  
+  updateAuction:
+    handler: src/handlers/updateAuction.handler
+    events:
+      - http:
+          method: PUT
+          path: /auction/{id}                          
 
 custom:
+  dynamodb:
+    stages:
+      - dev
+    start:
+      migrate: true
+      
   AuctionsTable:
     name: !Ref AuctionsTable
     arn:  !GetAtt AuctionsTable.Arn
